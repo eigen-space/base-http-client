@@ -3,6 +3,13 @@
     "version": "1.0.0",
     "description": "The implementation of an abstraction of http requests",
     "main": "index.js",
+    "author": "Nikita Agupov <nktrsk@gmail.com>",
+    "contributors": [
+        "Anton Kalashnikov <tohasan@yandex.ru>",
+        "Daniil Sitdikov <hello.boriskas@gmail.com>",
+        "Nikita Sergeev <sergeev.nickitos@yandex.ru>",
+        "Nikita Agupov <nktrsk@gmail.com>"
+    ],
     "repository": {
         "type": "git",
         "url": "git+https://github.com/eigen-space/base-http-service.git"

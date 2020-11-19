@@ -17,9 +17,8 @@ describe('BaseHttpClient', () => {
         it('should run fetch with default configuration', async () => {
             const baseUrl = 'https://example.com';
             const client = new BaseHttpClient<AnyDictionary>(provider);
-            const props = {};
 
-            await client.get(baseUrl, props);
+            await client.get(baseUrl);
 
             const commonPayload = { headers: {} };
             const expectedUrl = `${baseUrl}?_=${frozenTimestamp}`;
@@ -31,9 +30,8 @@ describe('BaseHttpClient', () => {
             const baseUrl = 'https://example.com';
             const client = new BaseHttpClient<AnyDictionary>(provider, undefined, undefined, baseUrl);
             const fragmentUrl = '/api';
-            const props = {};
 
-            await client.get(fragmentUrl, props);
+            await client.get(fragmentUrl);
 
             const commonPayload = { headers: {} };
             const expectedUrl = `${baseUrl}${fragmentUrl}?_=${frozenTimestamp}`;
@@ -57,9 +55,8 @@ describe('BaseHttpClient', () => {
         it('should configure anti-cache token after params in url', async () => {
             const baseUrl = 'https://example.com?param=auth';
             const client = new BaseHttpClient<AnyDictionary>(provider);
-            const props = { };
 
-            await client.get(baseUrl, props);
+            await client.get(baseUrl);
 
             const commonPayload = { headers: {} };
             const expectedPayload = { method: HttpRequestMethod.GET, ...commonPayload };

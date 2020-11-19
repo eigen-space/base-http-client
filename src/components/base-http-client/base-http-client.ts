@@ -1,8 +1,7 @@
 import { UrlReplacer } from '../url-replacer/url-replacer';
-import { CommonQueryProps, QueryProvider } from '../../types/query-provider';
 import { Dictionary } from '@eigenspace/common-types';
 import { RequestProvider } from '../../types/request-provider';
-import { HttpRequestMethod } from '../..';
+import { CommonQueryProps, HttpRequestMethod, QueryProvider } from '../..';
 import { FormDataAppender, FormDataAppenderConstructor, FormEntry } from '../..';
 import { UrlProcessor } from '../..';
 
@@ -30,33 +29,33 @@ export class BaseHttpClient<N> implements QueryProvider {
         this.baseUrl = baseUrl;
     }
 
-    get<T>(url: string, props: BaseHttpClientRequestProps): Promise<T> {
+    get<T>(url: string, props?: BaseHttpClientRequestProps): Promise<T> {
         return this.request(url, HttpRequestMethod.GET, props);
     }
 
-    post<T>(url: string, props: BaseHttpClientRequestProps): Promise<T> {
+    post<T>(url: string, props?: BaseHttpClientRequestProps): Promise<T> {
         return this.request(url, HttpRequestMethod.POST, props);
     }
 
     /* istanbul ignore next */
-    put<T>(url: string, props: BaseHttpClientRequestProps): Promise<T> {
+    put<T>(url: string, props?: BaseHttpClientRequestProps): Promise<T> {
         return this.request(url, HttpRequestMethod.PUT, props);
     }
 
     /* istanbul ignore next */
-    patch<T>(url: string, props: BaseHttpClientRequestProps): Promise<T> {
+    patch<T>(url: string, props?: BaseHttpClientRequestProps): Promise<T> {
         return this.request(url, HttpRequestMethod.PATCH, props);
     }
 
     /* istanbul ignore next */
-    delete<T>(url: string, props: BaseHttpClientRequestProps): Promise<T> {
+    delete<T>(url: string, props?: BaseHttpClientRequestProps): Promise<T> {
         return this.request(url, HttpRequestMethod.DELETE, props);
     }
 
     private async request<T>(
         fragmentUrl: string,
         method: HttpRequestMethod,
-        props: BaseHttpClientRequestProps
+        props: BaseHttpClientRequestProps = {}
     ): Promise<T> {
         const { params, options, data } = props;
         let url = this.replacer.process(`${this.baseUrl}${fragmentUrl}`, params);

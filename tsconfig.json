@@ -6,7 +6,7 @@
         "esModuleInterop": true,
         "resolveJsonModule": true,
         "outDir": "dist",
-        "declaration": false,
+        "declaration": true,
         "typeRoots": [
             "node_modules/@types"
         ],
