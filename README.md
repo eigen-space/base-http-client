@@ -7,6 +7,7 @@ This is an implementation of common http client that implements some http reques
 * `@eigenspace/common-types` - common types such as dictionary, etc.
 * `@eigenspace/codestyle` - includes lint rules, config for typescript.
 * `@eigenspace/commit-linter` - linter for commit messages.
+* `@eigenspace/helper-scripts` - is used for publish package.
 * `@types/*` - contains type definitions for specific library.
 * `clean-webpack-plugin` - it's used for clean bundle before run building.
 * `ts-loader` - it's used to load typescript code with webpack.

@@ -42,6 +42,7 @@
         "@eigenspace/codestyle": "latest",
         "@eigenspace/commit-linter": "latest",
         "@eigenspace/common-types": "0.0.20",
+        "@eigenspace/helper-scripts": "3.0.7",
         "@types/jest": "22.2.2",
         "clean-webpack-plugin": "2.0.2",
         "copy-webpack-plugin": "4.6.0",
