@@ -1,4 +1,4 @@
-import { UrlReplacer } from '../url-replacer/url-replacer';
+import { UrlReplacer } from '../..';
 import { Dictionary } from '@eigenspace/common-types';
 import { RequestProvider } from '../../types/request-provider';
 import { CommonQueryProps, HttpRequestMethod, QueryProvider } from '../..';

@@ -1,3 +1,5 @@
+export { BaseHttpClientDecorator } from './decorators/base/base-http-client.decorator';
+export { UrlReplacer } from './components/url-replacer/url-replacer';
 export { HttpStatusCode } from './enums/http-status-code.enum';
 export { HttpRequestMethod } from './enums/http-request-method.enum';
 export { ContentType } from './enums/content-type.enum';
