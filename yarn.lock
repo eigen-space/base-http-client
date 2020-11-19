@@ -204,6 +204,11 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
+"@eigenspace/argument-parser@1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@eigenspace/argument-parser/-/argument-parser-1.0.2.tgz#dbb21937d1b88795398ff7d1d26d0f8742a0999b"
+  integrity sha512-LgHE7X/6F8zTsPNt62CvJSxBo/grXKpX6+4A9iVihkLdIvFJ8KVP6vJ1ekZS6Quov6dEBB5aKSN5Z08yTaBafg==
+
 "@eigenspace/argument-parser@1.0.4":
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/@eigenspace/argument-parser/-/argument-parser-1.0.4.tgz#9c51fc5bfca474c98841942ed8440864cd455323"
@@ -225,6 +230,13 @@
   version "0.0.20"
   resolved "https://registry.yarnpkg.com/@eigenspace/common-types/-/common-types-0.0.20.tgz#29dba2c451ed9836fb13a13be4af30bcd82de44c"
   integrity sha512-EjHVZbzsVoere4w5mc+aOUb9beTurI5OoBfUss/cL9foWPP8p7yVtpfIK4VKdY/IbugFbO+RgqNP5nLvAEekKQ==
+
+"@eigenspace/helper-scripts@3.0.7":
+  version "3.0.7"
+  resolved "https://registry.yarnpkg.com/@eigenspace/helper-scripts/-/helper-scripts-3.0.7.tgz#3915cc6522ac3575ee0c87a61284372ab810e99e"
+  integrity sha512-ncAI9irIF+DG7F/CzcEfX/hbgWoSTPNuAPA1fN6ZIDoTWsuMTogMYZi9MuvHqFoIoizagmukUOzGC0NtNatZ8w==
+  dependencies:
+    "@eigenspace/argument-parser" "1.0.2"
 
 "@eslint/eslintrc@^0.1.3":
   version "0.1.3"
