@@ -1,5 +1,6 @@
 import { CommonQueryProps, QueryProvider } from '../..';
 
+/* istanbul ignore next */
 export abstract class BaseHttpClientDecorator implements QueryProvider {
 
     constructor(protected wrappedService: QueryProvider) {
