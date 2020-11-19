@@ -8,7 +8,7 @@ export interface CommonQueryProps {
     params?: AnyDictionary;
     options?: AnyDictionary;
     headers?: AnyDictionary;
-    data?: AnyDictionary | string | number | FormEntry[];
+    data?: AnyDictionary | string | FormEntry[];
 }
 
 /**
