@@ -1,6 +1,10 @@
 const path = require('path');
+const fs = require('fs');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+
+const packageJson = fs.readFileSync(path.join(__dirname, '../../package.json'), 'utf8');
+const libraryName = JSON.parse(packageJson).name;
 
 module.exports = {
     mode: 'production',
@@ -18,7 +22,9 @@ module.exports = {
     output: {
         filename: 'index.js',
         publicPath: '/',
-        path: path.resolve(__dirname, '../../dist')
+        path: path.resolve(__dirname, '../../dist'),
+        library: libraryName,
+        libraryTarget: 'commonjs2'
     },
     plugins: [
         new CleanWebpackPlugin(),
