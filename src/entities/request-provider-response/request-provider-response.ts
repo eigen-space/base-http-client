@@ -18,9 +18,13 @@ export abstract class RequestProviderResponse<N, T> {
             return;
         }
 
+        if (!this.contentTypeHeader) {
+            throw new Error('Content type in response headers should be defined');
+        }
+
         // Header can contain not only content type, but other is as well e.g. multipart/mixed; boundary=abcde
         const knownContentType = Object.keys(this.contentTypeToHandler)
-            .find(key => key.includes(this.contentTypeHeader!));
+            .find(key => this.contentTypeHeader!.includes(key));
 
         if (!knownContentType) {
             throw new Error(`Unsupported content type: ${this.contentTypeHeader}`);
