@@ -8,6 +8,8 @@ interface RequestProvider<N> {
 
 !endsub
 
+class SpecificProvider
+
 abstract RequestProviderResponse<N, T> {
     # contentTypeToHandler: Dictionary<Function>;
     + constructor(nativeResponse: N): RequestProviderResponse<N, T>;
@@ -27,7 +29,8 @@ class SpecificRequestProviderResponse
 
 class SpecificLibraryResponse
 
-RequestProviderOptions <--down[hidden] RequestProvider
+SpecificProvider -up..|> RequestProvider
+RequestProviderOptions <--left[hidden] RequestProvider
 RequestProvider -[hidden] RequestProviderResponse
 SpecificRequestProviderResponse -up-|> RequestProviderResponse
 SpecificLibraryResponse "- nativeResponse" -down--o SpecificRequestProviderResponse
