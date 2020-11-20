@@ -23,7 +23,7 @@ export abstract class RequestProviderResponse<N, T> {
             .find(key => key.includes(this.contentTypeHeader!));
 
         if (!knownContentType) {
-            throw new Error(`Unsupported content type: ${knownContentType}`);
+            throw new Error(`Unsupported content type: ${this.contentTypeHeader}`);
         }
 
         const handler = this.contentTypeToHandler[knownContentType];
