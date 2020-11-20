@@ -1,0 +1,15 @@
+@startuml
+
+!startsub UrlProcessor
+
+interface UrlProcessor {
+    + process(url: string, params?: AnyDictionary): string;
+}
+
+!endsub
+
+class SpecificProcessor
+
+SpecificProcessor -up..|> UrlProcessor
+
+@enduml

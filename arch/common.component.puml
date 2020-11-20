@@ -1,0 +1,25 @@
+@startuml
+skinparam componentStyle uml1
+
+interface QueryProvider as QP1
+interface QueryProvider as QP2
+interface QueryProvider as QP3
+interface QueryProvider as QP4
+
+[Base-http-client] as BaseHttpClient
+[Browser-http-client] as BrowserHttpClient
+[Nodejs-http-client] as NodejsHttpClient
+[Web app] as WebApp
+[Nodejs app] as NodejsApp
+
+BaseHttpClient -left-- QP1
+BaseHttpClient -down-- QP2
+BrowserHttpClient -left-- QP3
+NodejsHttpClient -left-- QP4
+
+WebApp -right-> QP3
+NodejsApp -right-> QP4
+BrowserHttpClient -right-> QP1
+NodejsHttpClient -right-> QP2
+
+@enduml
