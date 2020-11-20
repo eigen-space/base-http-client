@@ -1,0 +1,35 @@
+@startuml
+
+!startsub RequestProvider
+
+interface RequestProvider<N> {
+    + fetch<T>(\nurl: string, \noptions: RequestProviderOptions\n): RequestProviderResponse<N, T>;
+}
+
+!endsub
+
+abstract RequestProviderResponse<N, T> {
+    # contentTypeToHandler: Dictionary<Function>;
+    + constructor(nativeResponse: N): RequestProviderResponse<N, T>;
+    + data(): Promise<T>;
+    + {abstract} status(): HttpStatusCode | number;
+    # {abstract} json(): Promise<T>;
+    # {abstract} contentType():  ContentType;
+}
+
+interface RequestProviderOptions {
+    + headers: AnyDictionary [0..1];
+    + method: HttpRequestMethod [0..1];
+    + body: AnyDictionary [0..1];
+}
+
+class SpecificRequestProviderResponse
+
+class SpecificLibraryResponse
+
+RequestProviderOptions <--down[hidden] RequestProvider
+RequestProvider -[hidden] RequestProviderResponse
+SpecificRequestProviderResponse -up-|> RequestProviderResponse
+SpecificLibraryResponse "- nativeResponse" -down--o SpecificRequestProviderResponse
+
+@enduml
