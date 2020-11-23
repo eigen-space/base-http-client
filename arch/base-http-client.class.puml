@@ -1,0 +1,32 @@
+@startuml
+
+!includesub request-provider.class.puml!RequestProvider
+!includesub url-processor.class.puml!UrlProcessor
+
+interface CommonQueryProps {
+    + params: AnyDictionary [0..1];
+    + options: AnyDictionary [0..1];
+    + headers: AnyDictionary [0..1];
+    + data: AnyDictionary | string | FormEntry[] [0..1];
+}
+
+interface QueryProvider {
+    + get<T>(url: string, props: BaseHttpClientProps): Promise<T>;
+    + post<T>(url: string, props: BaseHttpClientProps): Promise<T>;
+    + put<T>(url: string, props: BaseHttpClientProps): Promise<T>;
+    + patch<T>(url: string, props: BaseHttpClientProps): Promise<T>;
+    + delete<T>(url: string, props: BaseHttpClientProps): Promise<T>;
+}
+
+class BaseHttpClient {
+    - baseUrl: string;
+    + constructor(requestProvider: RequestProvider, \n urlReplacer?: UrlReplacer, \nformDataConstructor?: new () => FormData,\
+        \n baseUrl = ''): QueryProvider;
+}
+
+CommonQueryProps <--left[hidden] QueryProvider
+BaseHttpClient -up..|> QueryProvider
+RequestProvider "- requestProvider" -down--o BaseHttpClient
+UrlProcessor "- urlProcessor" -down--o BaseHttpClient
+
+@enduml

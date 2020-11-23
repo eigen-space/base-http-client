@@ -1,5 +1,5 @@
 import { AnyDictionary } from '@eigenspace/common-types';
-import { FormEntry } from './form-data';
+import { FormEntry } from './form-data-appender';
 
 /**
  * Common properties to request.

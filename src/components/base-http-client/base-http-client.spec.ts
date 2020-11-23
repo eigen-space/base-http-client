@@ -105,7 +105,10 @@ describe('BaseHttpClient', () => {
 
             await client.post(baseUrl, props);
 
-            const headers = { 'Accept': 'application/json', 'Content-Type': 'application/json' };
+            const headers = {
+                'Accept': 'application/json',
+                'Content-Type': 'multipart/form-data'
+            };
             const body = new FormDataAppenderStub([['key', 'value', 'options']]);
             const expectedUrl = `${baseUrl}?_=${frozenTimestamp}`;
             const expectedPayload = { method: HttpRequestMethod.POST, headers, body };
