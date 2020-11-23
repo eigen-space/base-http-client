@@ -1,9 +1,10 @@
+export { HttpError } from './entities/http-error/http-error';
 export { BaseHttpClientDecorator } from './decorators/base/base-http-client.decorator';
 export { UrlReplacer } from './components/url-replacer/url-replacer';
 export { HttpStatusCode } from './enums/http-status-code.enum';
 export { HttpRequestMethod } from './enums/http-request-method.enum';
 export { ContentType } from './enums/content-type.enum';
-export * from './types/form-data';
+export * from './types/form-data-appender';
 export { UrlProcessor } from './types/url-processor';
 export { RequestProviderResponse } from './entities/request-provider-response/request-provider-response';
 export * from './types/query-provider';

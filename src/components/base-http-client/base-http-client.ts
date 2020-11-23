@@ -2,7 +2,7 @@ import { UrlReplacer } from '../..';
 import { Dictionary } from '@eigenspace/common-types';
 import { RequestProvider } from '../../types/request-provider';
 import { CommonQueryProps, HttpRequestMethod, QueryProvider } from '../..';
-import { FormDataAppender, FormDataAppenderConstructor, FormEntry } from '../..';
+import { FormDataAppenderConstructor, FormEntry } from '../..';
 import { UrlProcessor } from '../..';
 
 interface Options {
@@ -80,12 +80,18 @@ export class BaseHttpClient<N> implements QueryProvider {
                     throw new Error('To use FormData you have to define `FormDataAppender` dependency');
                 }
 
-                body = new this.formDataAppender();
-                headers = { ...headers, ...(body as FormDataAppender).getHeaders() };
+                const formData = new this.formDataAppender();
+                headers = {
+                    ...headers,
+                    'Content-Type': 'multipart/form-data',
+                    ...formData.getHeaders()
+                };
                 (data as FormEntry[]).forEach(entry => {
                     const [key, value, entryOptions] = entry;
-                    (body as FormDataAppender).append(key, value, entryOptions);
+                    formData.append(key, value, entryOptions);
                 });
+
+                body = formData;
             }
         }
 
