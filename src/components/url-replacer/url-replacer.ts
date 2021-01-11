@@ -7,7 +7,7 @@ export class UrlReplacer implements UrlProcessor {
 
     process(url: string, params: AnyDictionary = {}): string {
         const sanitized = url.replace(/:([a-zA-Z]+)/g, this.processMatching(params))
-            .replace(/[a-zA-Z_]*?=&/g, '')
+            .replace(/[a-zA-Z_-]*?=&/g, '')
             .replace(/[?&]?[a-zA-Z_]*?=$/g, '');
 
         return decodeURIComponent(sanitized);

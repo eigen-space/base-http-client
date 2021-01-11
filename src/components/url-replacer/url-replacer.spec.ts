@@ -15,9 +15,29 @@ describe('UrlReplacer', () => {
             expect(url).toEqual(expectedUrl);
         });
 
-        it('should remove empty params in the end of the path', () => {
-            const rawUrl = '/export?status=:status&page=:pageNumber&page_size=:pageSize';
+        it('should remove empty params', () => {
+            const rawUrl = '/export?status=:status&page=:pageNumber';
             const params = { status: 'exported' };
+
+            const url = replacer.process(rawUrl, params);
+
+            const expected = '/export?status=exported';
+            expect(url).toEqual(expected);
+        });
+
+        it('should remove empty params in any case', () => {
+            const rawUrl = '/export?status-type=:status&page=:pageNumber&page_size=:pageSize';
+            const params = { pageNumber: '1' };
+
+            const url = replacer.process(rawUrl, params);
+
+            const expected = '/export?page=1';
+            expect(url).toEqual(expected);
+        });
+
+        it('should not apply anything if params has excess fields', () => {
+            const rawUrl = '/export?status=:status';
+            const params = { status: 'exported', pageNumber: '1', name: 'John' };
 
             const url = replacer.process(rawUrl, params);
 
