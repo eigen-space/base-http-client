@@ -35,6 +35,38 @@ describe('UrlReplacer', () => {
             expect(url).toEqual(expected);
         });
 
+        it('should remove empty params in the middle of query', () => {
+            const rawUrl = '/export?status=:status&page_size=:pageSize&page=:pageNumber';
+            const rawUrlWithKebabCaseAtTheEnd = '/export?status-type=:status&page_size=:pageSize&page=:pageNumber';
+            const rawUrlWithUnderscoreAtTheEnd = '/export?status_type=:status&page_size=:pageSize&page=:pageNumber';
+            const params = { pageNumber: 22 };
+
+            const url = replacer.process(rawUrl, params);
+            const urlWithKebabCaseAtTheEnd = replacer.process(rawUrlWithKebabCaseAtTheEnd, params);
+            const urlWithUnderscoreAtTheEnd = replacer.process(rawUrlWithUnderscoreAtTheEnd, params);
+
+            const expected = '/export?page=22';
+            expect(url).toEqual(expected);
+            expect(urlWithKebabCaseAtTheEnd).toEqual(expected);
+            expect(urlWithUnderscoreAtTheEnd).toEqual(expected);
+        });
+
+        it('should remove empty params in any case at the end of query', () => {
+            const rawUrl = '/export?page=:pageNumber&statusType=:pageSize';
+            const rawUrlWithKebabCaseAtTheEnd = '/export?page=:pageNumber&status-type=:pageSize';
+            const rawUrlWithUnderscoreAtTheEnd = '/export?page=:pageNumber&status_type=:pageSize';
+            const params = { pageNumber: '1' };
+
+            const url = replacer.process(rawUrl, params);
+            const urlWithKebabCaseAtTheEnd = replacer.process(rawUrlWithKebabCaseAtTheEnd, params);
+            const urlWithUnderscoreAtTheEnd = replacer.process(rawUrlWithUnderscoreAtTheEnd, params);
+
+            const expected = '/export?page=1';
+            expect(url).toEqual(expected);
+            expect(urlWithKebabCaseAtTheEnd).toEqual(expected);
+            expect(urlWithUnderscoreAtTheEnd).toEqual(expected);
+        });
+
         it('should not apply anything if params has excess fields', () => {
             const rawUrl = '/export?status=:status';
             const params = { status: 'exported', pageNumber: '1', name: 'John' };
@@ -51,16 +83,6 @@ describe('UrlReplacer', () => {
             const url = replacer.process(rawUrl);
 
             const expected = '/export';
-            expect(url).toEqual(expected);
-        });
-
-        it('should remove empty params in the middle of path', () => {
-            const rawUrl = '/export?status=:status&page=:pageNumber&page_size=:pageSize';
-            const params = { pageSize: 22 };
-
-            const url = replacer.process(rawUrl, params);
-
-            const expected = '/export?page_size=22';
             expect(url).toEqual(expected);
         });
     });
