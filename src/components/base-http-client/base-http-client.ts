@@ -1,9 +1,9 @@
-import { UrlReplacer } from '../..';
 import { Dictionary } from '@eigenspace/common-types';
 import { RequestProvider } from '../../types/request-provider';
 import { CommonQueryProps, HttpRequestMethod, QueryProvider } from '../..';
 import { FormDataAppenderConstructor, FormEntry } from '../..';
 import { UrlProcessor } from '../..';
+import { UrlReplacer } from '@eigenspace/url-replacer';
 
 interface Options {
     isFormData?: boolean;

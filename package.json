@@ -63,5 +63,8 @@
         "typescript": "3.8.2",
         "webpack": "4.32.0",
         "webpack-cli": "4.2.0"
+    },
+    "dependencies": {
+        "@eigenspace/url-replacer": "1.0.2"
     }
 }
