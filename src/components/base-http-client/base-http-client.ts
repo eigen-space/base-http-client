@@ -7,7 +7,7 @@ import { UrlReplacer } from '@eigenspace/url-replacer';
 
 interface Options {
     isFormData?: boolean;
-    isAntiCacheDisabled?: boolean;
+    isAntiCacheEnabled?: boolean;
 }
 
 export interface BaseHttpClientRequestProps extends CommonQueryProps {
@@ -58,14 +58,18 @@ export class BaseHttpClient<N> implements QueryProvider {
         props: BaseHttpClientRequestProps = {}
     ): Promise<T> {
         const { params, options, data } = props;
-        let url = this.replacer.process(`${this.baseUrl}${fragmentUrl}`, params);
-
-        if (!options?.isAntiCacheDisabled) {
-            url += `${!url.includes('?') ? '?' : '&'}_=${Date.now()}`;
-        }
+        const url = this.replacer.process(`${this.baseUrl}${fragmentUrl}`, params);
 
         let body = data;
         let headers: Dictionary<string> = props.headers || {};
+
+        const isAntiCacheEnabled = options?.isAntiCacheEnabled || true;
+        if (isAntiCacheEnabled) {
+            headers = {
+                ...headers,
+                'Cache-Control': 'no-cache, no-store, max-age=0, must-revalidate'
+            };
+        }
 
         if (data && typeof data === 'object') {
             headers = {
@@ -86,8 +90,7 @@ export class BaseHttpClient<N> implements QueryProvider {
                     'Content-Type': 'multipart/form-data',
                     ...formData.getHeaders()
                 };
-                (data as FormEntry[]).forEach(entry => {
-                    const [key, value, entryOptions] = entry;
+                (data as FormEntry[]).forEach(([key, value, entryOptions]) => {
                     formData.append(key, value, entryOptions);
                 });
 

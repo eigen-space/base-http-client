@@ -2,9 +2,9 @@ import { AnyDictionary } from '@eigenspace/common-types';
 import { HttpStatusCode } from '../..';
 
 export class NativeResponseStub {
-    private data: AnyDictionary;
-    private statusData: HttpStatusCode;
-    private contentTypeHeader?: string;
+    private readonly data: AnyDictionary;
+    private readonly statusData: HttpStatusCode;
+    private readonly contentTypeHeader?: string;
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     constructor(data: any, contentTypeHeader?: string, status = HttpStatusCode.OK) {
