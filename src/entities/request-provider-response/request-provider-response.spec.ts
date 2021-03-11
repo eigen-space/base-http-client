@@ -74,7 +74,7 @@ describe('RequestProviderResponse', () => {
         });
 
         it('should return empty response if there are not data to stream', async () => {
-            const chunk = JSON.stringify({ type: 'end' });
+            const chunk = JSON.stringify({ event: 'end' });
             const nativeResponse = new NativeResponseStub([chunk], ContentType.EVENT_STREAM);
             const response = new RequestProviderResponseStub(nativeResponse);
 
@@ -87,10 +87,10 @@ describe('RequestProviderResponse', () => {
 
         it('should return entity list if there are list to stream', async () => {
             const chunks = [
-                { type: 'payload', data: { key: 1 } },
-                { type: 'payload', data: { key: 2 } },
-                { type: 'payload', data: { key: 3 } },
-                { type: 'end' }
+                { event: 'payload', data: { key: 1 } },
+                { event: 'payload', data: { key: 2 } },
+                { event: 'payload', data: { key: 3 } },
+                { event: 'end' }
             ].map(i => JSON.stringify(i));
 
             const nativeResponse = new NativeResponseStub(chunks, ContentType.EVENT_STREAM);
@@ -107,11 +107,11 @@ describe('RequestProviderResponse', () => {
 
         it('should process defined events to stream', async () => {
             const chunks = [
-                { type: 'custom-header', data: { status: 200 } },
-                { type: 'custom-payload', data: { key: 1 } },
-                { type: 'custom-payload', data: { key: 2 } },
-                { type: 'custom-payload', data: { key: 3 } },
-                { type: 'custom-end' }
+                { event: 'custom-header', data: { status: 200 } },
+                { event: 'custom-payload', data: { key: 1 } },
+                { event: 'custom-payload', data: { key: 2 } },
+                { event: 'custom-payload', data: { key: 3 } },
+                { event: 'custom-end' }
             ].map(i => JSON.stringify(i));
 
             const nativeResponse = new NativeResponseStub(chunks, ContentType.EVENT_STREAM);
@@ -130,7 +130,7 @@ describe('RequestProviderResponse', () => {
 
         it('should throw error if event is not familiar', async () => {
             const chunks = [
-                { type: 'custom-end' }
+                { event: 'custom-end' }
             ].map(i => JSON.stringify(i));
 
             const nativeResponse = new NativeResponseStub(chunks, ContentType.EVENT_STREAM);

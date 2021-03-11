@@ -34,7 +34,7 @@ export class StreamObserver<S extends EventEmitter = EventEmitter> {
                 const messages = this.chunkConverter.convert(rawPayload.toString());
 
                 messages.forEach(payload => {
-                    switch (payload.type) {
+                    switch (payload.event) {
                         case headerEvent:
                             data = { ...payload.data, items: data.items };
                             break;

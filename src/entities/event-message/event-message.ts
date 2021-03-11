@@ -1,5 +1,5 @@
 export interface EventMessage<T> {
-    type: string;
-    lastEventId?: string;
+    event: string;
+    id?: string;
     data: T;
 }
