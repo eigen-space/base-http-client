@@ -45,7 +45,8 @@ export class NativeResponseStub {
                     return `${key}:${formattedValue}`;
                 });
 
-                done(null, partOfChunks.join('\n'));
+                const eventSeparator = '\n\n';
+                done(null, `${partOfChunks.join('\n')}${eventSeparator}`);
             }
         });
 

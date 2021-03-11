@@ -20,6 +20,8 @@ export class StreamObserver<S extends EventEmitter = EventEmitter> {
 
     constructor(stream: S) {
         this.stream = stream;
+
+        this.extractData = this.extractData.bind(this);
     }
 
     fetchAll<T>(
@@ -28,10 +30,12 @@ export class StreamObserver<S extends EventEmitter = EventEmitter> {
         endEvent = 'end'
     ): Promise<FetchAllResponse<T>> {
         let data: FetchAllResponse<T> = { items: [] };
+        const rawChunks: string[] = [];
 
         return new Promise((resolve, reject) => {
-            const extractData = (rawPayload: string, unsubscribeFn: Function): void => {
-                const messages = this.chunkConverter.convert(rawPayload.toString());
+
+            const convertData = (unsubscribeFn: Function): void => {
+                const messages = this.chunkConverter.convert(rawChunks.join(''));
 
                 messages.forEach(payload => {
                     switch (payload.event) {
@@ -54,14 +58,21 @@ export class StreamObserver<S extends EventEmitter = EventEmitter> {
                 });
             };
 
+            this.stream.on('data', (chunk: string) => this.extractData(chunk, rawChunks));
+
             this.stream.on(
-                'data',
-                (payload: string) => extractData(payload, () => this.unsubscribe('data', extractData))
+                'end',
+                () => convertData(() => this.unsubscribe('end', [convertData, this.extractData]))
             );
         });
     };
 
-    private unsubscribe(event: string, callback: Function): void {
-        this.stream.off(event, callback);
+    // noinspection JSMethodCanBeStatic
+    private extractData(rawChunk: string, chunkStore: string[]): void {
+        chunkStore.push(rawChunk.toString());
+    };
+
+    private unsubscribe(event: string, callbacks: Function[]): void {
+        callbacks.forEach(cb => this.stream.off(event, cb));
     }
 }
