@@ -1,7 +1,7 @@
 if: commit_message !~ /auto\/ci:\sset\sversion/
 language: node_js
 node_js:
-  - "12.16.3"
+  - "14.15.4"
 git:
   depth: false
 cache:

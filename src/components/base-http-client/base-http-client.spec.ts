@@ -1,6 +1,6 @@
 import { BaseHttpClient } from './base-http-client';
 import { AnyDictionary } from '@eigenspace/common-types';
-import { RequestProvider } from '../../types/request-provider';
+import { RequestProvider } from '../../types';
 import { FormEntry, HttpRequestMethod } from '../..';
 import { FormDataAppenderStub } from './form-appender.stub';
 
@@ -8,9 +8,6 @@ describe('BaseHttpClient', () => {
     const provider = {
         fetch: jest.fn(() => ({ data: jest.fn() }))
     } as RequestProvider<AnyDictionary>;
-
-    const frozenTimestamp = 1605777416374;
-    Date.now = jest.fn(() => frozenTimestamp);
 
     describe('#get', () => {
 
@@ -20,10 +17,11 @@ describe('BaseHttpClient', () => {
 
             await client.get(baseUrl);
 
-            const commonPayload = { headers: {} };
-            const expectedUrl = `${baseUrl}?_=${frozenTimestamp}`;
+            const commonPayload = {
+                headers: { 'Cache-Control': 'no-cache, no-store, max-age=0, must-revalidate' }
+            };
             const expectedPayload = { method: HttpRequestMethod.GET, ...commonPayload };
-            expect(provider.fetch).toBeCalledWith(expectedUrl, expectedPayload);
+            expect(provider.fetch).toBeCalledWith(baseUrl, expectedPayload);
         });
 
         it('should use base url from constructor', async () => {
@@ -33,8 +31,10 @@ describe('BaseHttpClient', () => {
 
             await client.get(fragmentUrl);
 
-            const commonPayload = { headers: {} };
-            const expectedUrl = `${baseUrl}${fragmentUrl}?_=${frozenTimestamp}`;
+            const commonPayload = {
+                headers: { 'Cache-Control': 'no-cache, no-store, max-age=0, must-revalidate' }
+            };
+            const expectedUrl = `${baseUrl}${fragmentUrl}`;
             const expectedPayload = { method: HttpRequestMethod.GET, ...commonPayload };
             expect(provider.fetch).toBeCalledWith(expectedUrl, expectedPayload);
         });
@@ -42,7 +42,7 @@ describe('BaseHttpClient', () => {
         it('should ignore anti-cache processing if the option is defined', async () => {
             const baseUrl = 'https://example.com';
             const client = new BaseHttpClient<AnyDictionary>(provider);
-            const options = { isAntiCacheDisabled: true };
+            const options = { isAntiCacheEnabled: false };
             const props = { options };
 
             await client.get(baseUrl, props);
@@ -58,10 +58,11 @@ describe('BaseHttpClient', () => {
 
             await client.get(baseUrl);
 
-            const commonPayload = { headers: {} };
+            const commonPayload = {
+                headers: { 'Cache-Control': 'no-cache, no-store, max-age=0, must-revalidate' }
+            };
             const expectedPayload = { method: HttpRequestMethod.GET, ...commonPayload };
-            const expectedUrl = `${baseUrl}&_=${frozenTimestamp}`;
-            expect(provider.fetch).toBeCalledWith(expectedUrl, expectedPayload);
+            expect(provider.fetch).toBeCalledWith(baseUrl, expectedPayload);
         });
     });
 
@@ -75,11 +76,14 @@ describe('BaseHttpClient', () => {
 
             await client.post(baseUrl, props);
 
-            const headers = { 'Accept': 'application/json', 'Content-Type': 'application/json' };
+            const headers = {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Cache-Control': 'no-cache, no-store, max-age=0, must-revalidate'
+            };
             const body = JSON.stringify(data);
-            const expectedUrl = `${baseUrl}?_=${frozenTimestamp}`;
             const expectedPayload = { method: HttpRequestMethod.POST, headers, body };
-            expect(provider.fetch).toBeCalledWith(expectedUrl, expectedPayload);
+            expect(provider.fetch).toBeCalledWith(baseUrl, expectedPayload);
         });
 
         it('should throw error if we want to use form data but we had not defined deps', async () => {
@@ -107,12 +111,12 @@ describe('BaseHttpClient', () => {
 
             const headers = {
                 'Accept': 'application/json',
-                'Content-Type': 'multipart/form-data'
+                'Content-Type': 'multipart/form-data',
+                'Cache-Control': 'no-cache, no-store, max-age=0, must-revalidate'
             };
             const body = new FormDataAppenderStub([['key', 'value', 'options']]);
-            const expectedUrl = `${baseUrl}?_=${frozenTimestamp}`;
             const expectedPayload = { method: HttpRequestMethod.POST, headers, body };
-            expect(provider.fetch).toBeCalledWith(expectedUrl, expectedPayload);
+            expect(provider.fetch).toBeCalledWith(baseUrl, expectedPayload);
         });
     });
 });

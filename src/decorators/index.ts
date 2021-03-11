@@ -1,0 +1,1 @@
+export { BaseHttpClientDecorator } from './base/base-http-client.decorator';

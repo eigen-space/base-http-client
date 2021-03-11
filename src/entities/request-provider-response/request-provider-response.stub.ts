@@ -1,10 +1,10 @@
-import { HttpStatusCode } from '../..';
+import { Blob, HttpStatusCode, StreamObserver } from '../..';
 import { ContentType } from '../..';
 import { AnyDictionary } from '@eigenspace/common-types';
 import { RequestProviderResponse } from './request-provider-response';
 import { NativeResponseStub } from './native-respose.stub';
 
-export class RequestProviderResponseStub extends RequestProviderResponse<NativeResponseStub, AnyDictionary> {
+export class RequestProviderResponseStub extends RequestProviderResponse<AnyDictionary, NativeResponseStub> {
 
     get status(): HttpStatusCode | number {
         return this.nativeResponse.status;
@@ -14,7 +14,15 @@ export class RequestProviderResponseStub extends RequestProviderResponse<NativeR
         return this.nativeResponse.json();
     }
 
+    protected observer(): Promise<StreamObserver> {
+        return this.nativeResponse.observer();
+    }
+
     protected get contentTypeHeader(): ContentType | string {
         return this.nativeResponse.headers.get('Content-Type')!;
+    }
+
+    protected blob(): Promise<Blob> {
+        throw new Error('Not implemented');
     }
 }

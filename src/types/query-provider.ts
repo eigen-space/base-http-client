@@ -1,5 +1,6 @@
 import { AnyDictionary } from '@eigenspace/common-types';
 import { FormEntry } from './form-data-appender';
+import { OutputData } from '../entities';
 
 /**
  * Common properties to request.
@@ -17,7 +18,7 @@ export interface CommonQueryProps {
  * and abstractions, if you use decorators in services directly. Therefore, an interface stood out that does not know
  * anything about layers.
  */
-export interface QueryProvider {
+export interface QueryProvider<R> {
 
     /**
      * Requests data via GET method.
@@ -25,7 +26,7 @@ export interface QueryProvider {
      * @param {string} url
      * @param {CommonQueryProps} [props]
      */
-    get<T>(url: string, props?: CommonQueryProps): Promise<T>;
+    get<T>(url: string, props?: CommonQueryProps): Promise<OutputData<T, R>>;
 
     /**
      * Requests data via POST method.
@@ -33,7 +34,7 @@ export interface QueryProvider {
      * @param {string} url
      * @param {CommonQueryProps} [props]
      */
-    post<T>(url: string, props?: CommonQueryProps): Promise<T>;
+    post<T>(url: string, props?: CommonQueryProps): Promise<OutputData<T, R>>;
 
     /**
      * Requests data via PUT method.
@@ -41,7 +42,7 @@ export interface QueryProvider {
      * @param {string} url
      * @param {CommonQueryProps} [props]
      */
-    put<T>(url: string, props?: CommonQueryProps): Promise<T>;
+    put<T>(url: string, props?: CommonQueryProps): Promise<OutputData<T, R>>;
 
     /**
      * Requests data via PATCH method.
@@ -49,7 +50,7 @@ export interface QueryProvider {
      * @param {string} url
      * @param {CommonQueryProps} [props]
      */
-    patch<T>(url: string, props?: CommonQueryProps): Promise<T>;
+    patch<T>(url: string, props?: CommonQueryProps): Promise<OutputData<T, R>>;
 
     /**
      * Requests data via DELETE method.
@@ -57,5 +58,5 @@ export interface QueryProvider {
      * @param {string} url
      * @param {CommonQueryProps} [props]
      */
-    delete<T>(url: string, props?: CommonQueryProps): Promise<T>;
+    delete<T>(url: string, props?: CommonQueryProps): Promise<OutputData<T, R>>;
 }

@@ -1,6 +1,7 @@
 export enum ContentType {
     JSON = 'application/json',
     JSON_LD = 'application/ld+json',
-    OCTET_STREAM = 'application/octet-stream',
+    EVENT_STREAM = 'text/event-stream',
+    PDF = 'application/pdf',
     PLAIN_TEXT = 'text/plain'
 }

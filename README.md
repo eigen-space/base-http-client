@@ -2,6 +2,11 @@
 
 This is an implementation of common http client that implements some http request abstraction.
 
+# Why do we have that dependencies?
+
+* `@eigenspace/url-replacer` - to process template urls.
+* `@eigenspace/logger` - to log events.
+
 # Why do we have that dev dependencies?
 
 * `@eigenspace/common-types` - common types such as dictionary, etc.
