@@ -1,20 +1,27 @@
 import { HttpStatusCode } from '../..';
 import { ContentType } from '../..';
 import { Dictionary } from '@eigenspace/common-types';
+import { Logger } from '@eigenspace/logger';
+import { Blob } from '../../types';
 
-export abstract class RequestProviderResponse<N, T> {
+export type OutputData<T, R> = T | R | Blob | undefined;
+
+export abstract class RequestProviderResponse<T, R> {
     protected contentTypeToHandler = {
         [ContentType.JSON]: this.json.bind(this),
-        [ContentType.JSON_LD]: this.json.bind(this)
-    } as Dictionary<() => Promise<T>>;
+        [ContentType.JSON_LD]: this.json.bind(this),
+        [ContentType.OCTET_STREAM]: this.blob.bind(this),
+        [ContentType.PDF]: this.blob.bind(this)
+    } as Dictionary<() => Promise<OutputData<T, R>>>;
 
-    constructor(protected nativeResponse: N) {
+    private logger = new Logger({ component: 'RequestProviderResponse' });
+
+    constructor(protected nativeResponse: R) {
     }
 
-    async data(): Promise<T> {
+    async data(): Promise<OutputData<T, R>> {
         if (this.status === HttpStatusCode.NO_CONTENT) {
             // In our case, we expect that consumer will define `undefined` as type of response
-            // @ts-ignore
             return;
         }
 
@@ -22,12 +29,14 @@ export abstract class RequestProviderResponse<N, T> {
             throw new Error('Content type in response headers should be defined');
         }
 
-        // Header can contain not only content type, but other is as well e.g. multipart/mixed; boundary=abcde
+        // Header can contain not only content type, but other is as well e.g. `multipart/mixed; boundary=abcde`
         const knownContentType = Object.keys(this.contentTypeToHandler)
             .find(key => this.contentTypeHeader!.includes(key));
 
         if (!knownContentType) {
-            throw new Error(`Unsupported content type: ${this.contentTypeHeader}`);
+            // Just return as is
+            this.logger.warn('data', `unsupported content type: ${this.contentTypeHeader}`);
+            return this.nativeResponse;
         }
 
         const handler = this.contentTypeToHandler[knownContentType];
@@ -38,6 +47,8 @@ export abstract class RequestProviderResponse<N, T> {
     abstract get status(): HttpStatusCode | number;
 
     protected abstract json(): Promise<T>;
+
+    protected abstract blob(): Promise<Blob>;
 
     protected abstract get contentTypeHeader(): ContentType | string | undefined;
 }

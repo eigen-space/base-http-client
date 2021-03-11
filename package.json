@@ -65,6 +65,7 @@
         "webpack-cli": "4.2.0"
     },
     "dependencies": {
+        "@eigenspace/logger": "1.0.8",
         "@eigenspace/url-replacer": "1.0.2"
     }
 }

@@ -1,6 +1,6 @@
 import { Dictionary } from '@eigenspace/common-types';
-import { RequestProvider } from '../../types/request-provider';
-import { CommonQueryProps, HttpRequestMethod, QueryProvider } from '../..';
+import { RequestProvider } from '../../types';
+import { CommonQueryProps, HttpRequestMethod, OutputData, QueryProvider } from '../..';
 import { FormDataAppenderConstructor, FormEntry } from '../..';
 import { UrlProcessor } from '../..';
 import { UrlReplacer } from '@eigenspace/url-replacer';
@@ -14,13 +14,13 @@ export interface BaseHttpClientRequestProps extends CommonQueryProps {
     options?: Options;
 }
 
-export class BaseHttpClient<N> implements QueryProvider {
+export class BaseHttpClient<R> implements QueryProvider<R> {
     private readonly baseUrl: string;
 
     private replacer: UrlProcessor;
 
     constructor(
-        private requestProvider: RequestProvider<N>,
+        private requestProvider: RequestProvider<R>,
         urlReplacer?: UrlProcessor,
         private formDataAppender?: FormDataAppenderConstructor,
         baseUrl = ''
@@ -29,26 +29,26 @@ export class BaseHttpClient<N> implements QueryProvider {
         this.baseUrl = baseUrl;
     }
 
-    get<T>(url: string, props?: BaseHttpClientRequestProps): Promise<T> {
+    get<T>(url: string, props?: BaseHttpClientRequestProps): Promise<OutputData<T, R>> {
         return this.request(url, HttpRequestMethod.GET, props);
     }
 
-    post<T>(url: string, props?: BaseHttpClientRequestProps): Promise<T> {
+    post<T>(url: string, props?: BaseHttpClientRequestProps): Promise<OutputData<T, R>> {
         return this.request(url, HttpRequestMethod.POST, props);
     }
 
     /* istanbul ignore next */
-    put<T>(url: string, props?: BaseHttpClientRequestProps): Promise<T> {
+    put<T>(url: string, props?: BaseHttpClientRequestProps): Promise<OutputData<T, R>> {
         return this.request(url, HttpRequestMethod.PUT, props);
     }
 
     /* istanbul ignore next */
-    patch<T>(url: string, props?: BaseHttpClientRequestProps): Promise<T> {
+    patch<T>(url: string, props?: BaseHttpClientRequestProps): Promise<OutputData<T, R>> {
         return this.request(url, HttpRequestMethod.PATCH, props);
     }
 
     /* istanbul ignore next */
-    delete<T>(url: string, props?: BaseHttpClientRequestProps): Promise<T> {
+    delete<T>(url: string, props?: BaseHttpClientRequestProps): Promise<OutputData<T, R>> {
         return this.request(url, HttpRequestMethod.DELETE, props);
     }
 
@@ -56,14 +56,14 @@ export class BaseHttpClient<N> implements QueryProvider {
         fragmentUrl: string,
         method: HttpRequestMethod,
         props: BaseHttpClientRequestProps = {}
-    ): Promise<T> {
+    ): Promise<OutputData<T, R>> {
         const { params, options, data } = props;
         const url = this.replacer.process(`${this.baseUrl}${fragmentUrl}`, params);
 
         let body = data;
         let headers: Dictionary<string> = props.headers || {};
 
-        const isAntiCacheEnabled = options?.isAntiCacheEnabled || true;
+        const isAntiCacheEnabled = options?.isAntiCacheEnabled != null ? options?.isAntiCacheEnabled : true;
         if (isAntiCacheEnabled) {
             headers = {
                 ...headers,

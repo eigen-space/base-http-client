@@ -29,6 +29,18 @@ describe('RequestProviderResponse', () => {
             expect(data).toEqual(expectedData);
         });
 
+        it('should throw error for non-implemented default handler', async () => {
+            const rawData = 'binary data';
+            const nativeResponse = new NativeResponseStub(rawData, ContentType.PDF);
+            const response = new RequestProviderResponseStub(nativeResponse);
+
+            try {
+                await response.data();
+            } catch (e) {
+                expect(e).toBeDefined();
+            }
+        });
+
         it('should throw error for empty content type', async () => {
             const rawData = 'plain-text';
             const nativeResponse = new NativeResponseStub(rawData, undefined);
@@ -46,11 +58,9 @@ describe('RequestProviderResponse', () => {
             const nativeResponse = new NativeResponseStub(rawData, ContentType.PLAIN_TEXT);
             const response = new RequestProviderResponseStub(nativeResponse);
 
-            try {
-                await response.data();
-            } catch (e) {
-                expect(e).toBeDefined();
-            }
+            const data = await response.data();
+
+            expect(data).toBeInstanceOf(NativeResponseStub);
         });
 
         it('should return empty for status code that means `no content`', async () => {
