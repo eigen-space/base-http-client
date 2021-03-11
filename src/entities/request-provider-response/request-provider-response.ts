@@ -2,15 +2,15 @@ import { HttpStatusCode } from '../..';
 import { ContentType } from '../..';
 import { Dictionary } from '@eigenspace/common-types';
 import { Logger } from '@eigenspace/logger';
-import { Blob } from '../../types';
+import { Blob, StreamObserver } from '../../types';
 
-export type OutputData<T, R> = T | R | Blob | undefined;
+export type OutputData<T, R> = T | R | Blob | StreamObserver | undefined;
 
 export abstract class RequestProviderResponse<T, R> {
     protected contentTypeToHandler = {
         [ContentType.JSON]: this.json.bind(this),
         [ContentType.JSON_LD]: this.json.bind(this),
-        [ContentType.OCTET_STREAM]: this.blob.bind(this),
+        [ContentType.EVENT_STREAM]: this.observer.bind(this),
         [ContentType.PDF]: this.blob.bind(this)
     } as Dictionary<() => Promise<OutputData<T, R>>>;
 
@@ -49,6 +49,8 @@ export abstract class RequestProviderResponse<T, R> {
     protected abstract json(): Promise<T>;
 
     protected abstract blob(): Promise<Blob>;
+
+    protected abstract observer(): Promise<StreamObserver>;
 
     protected abstract get contentTypeHeader(): ContentType | string | undefined;
 }

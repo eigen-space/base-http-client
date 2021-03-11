@@ -3,3 +3,4 @@ export * from './request-provider';
 export * from './form-data-appender';
 export * from './query-provider';
 export { Blob } from './blob';
+export * from '../entities/stream-observer/stream-observer';

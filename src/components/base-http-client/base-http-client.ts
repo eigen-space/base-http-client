@@ -63,7 +63,7 @@ export class BaseHttpClient<R> implements QueryProvider<R> {
         let body = data;
         let headers: Dictionary<string> = props.headers || {};
 
-        const isAntiCacheEnabled = options?.isAntiCacheEnabled != null ? options?.isAntiCacheEnabled : true;
+        const isAntiCacheEnabled = options?.isAntiCacheEnabled != null ? options.isAntiCacheEnabled : true;
         if (isAntiCacheEnabled) {
             headers = {
                 ...headers,

@@ -1,4 +1,4 @@
-import { Blob, HttpStatusCode } from '../..';
+import { Blob, HttpStatusCode, StreamObserver } from '../..';
 import { ContentType } from '../..';
 import { AnyDictionary } from '@eigenspace/common-types';
 import { RequestProviderResponse } from './request-provider-response';
@@ -12,6 +12,10 @@ export class RequestProviderResponseStub extends RequestProviderResponse<AnyDict
 
     protected json(): Promise<AnyDictionary> {
         return this.nativeResponse.json();
+    }
+
+    protected observer(): Promise<StreamObserver> {
+        return this.nativeResponse.observer();
     }
 
     protected get contentTypeHeader(): ContentType | string {

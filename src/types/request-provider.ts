@@ -10,6 +10,6 @@ export interface RequestProviderOptions {
     body?: BodyType;
 }
 
-export interface RequestProvider<N> {
-    fetch<T>(url: string, options: RequestProviderOptions): Promise<RequestProviderResponse<N, T>>;
+export interface RequestProvider<R> {
+    fetch<T>(url: string, options: RequestProviderOptions): Promise<RequestProviderResponse<T, R>>;
 }

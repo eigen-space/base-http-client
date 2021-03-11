@@ -2,6 +2,7 @@ import { RequestProviderResponseStub } from './request-provider-response.stub';
 import { NativeResponseStub } from './native-respose.stub';
 import { ContentType } from '../..';
 import { HttpStatusCode } from '../..';
+import { StreamObserverStub } from '../stream-observer/stream-observer.stub';
 
 describe('RequestProviderResponse', () => {
 
@@ -70,6 +71,78 @@ describe('RequestProviderResponse', () => {
             const data = await response.data();
 
             expect(data).toBeUndefined();
+        });
+
+        it('should return empty response if there are not data to stream', async () => {
+            const chunk = JSON.stringify({ type: 'end' });
+            const nativeResponse = new NativeResponseStub([chunk], ContentType.EVENT_STREAM);
+            const response = new RequestProviderResponseStub(nativeResponse);
+
+            const observer = await response.data();
+            const data = await (observer as StreamObserverStub).fetchAll();
+
+            const expected = { items: [] };
+            expect(data).toEqual(expected);
+        });
+
+        it('should return entity list if there are list to stream', async () => {
+            const chunks = [
+                { type: 'payload', data: '1' },
+                { type: 'payload', data: '2' },
+                { type: 'payload', data: '3' },
+                { type: 'end' }
+            ].map(i => JSON.stringify(i));
+
+            const nativeResponse = new NativeResponseStub(chunks, ContentType.EVENT_STREAM);
+            const response = new RequestProviderResponseStub(nativeResponse);
+
+            const observer = await response.data();
+            const data = await (observer as StreamObserverStub).fetchAll();
+
+            const expected = {
+                items: ['1', '2', '3']
+            };
+            expect(data).toEqual(expected);
+        });
+
+        it('should process defined events to stream', async () => {
+            const chunks = [
+                { type: 'custom-header', data: { status: 200 } },
+                { type: 'custom-payload', data: '1' },
+                { type: 'custom-payload', data: '2' },
+                { type: 'custom-payload', data: '3' },
+                { type: 'custom-end' }
+            ].map(i => JSON.stringify(i));
+
+            const nativeResponse = new NativeResponseStub(chunks, ContentType.EVENT_STREAM);
+            const response = new RequestProviderResponseStub(nativeResponse);
+
+            const observer = await response.data();
+            const events = ['custom-header', 'custom-payload', 'custom-end'];
+            const data = await (observer as StreamObserverStub).fetchAll(...events);
+
+            const expected = {
+                status: 200,
+                items: ['1', '2', '3']
+            };
+            expect(data).toEqual(expected);
+        });
+
+        it('should throw error if event is not familiar', async () => {
+            const chunks = [
+                { type: 'custom-end' }
+            ].map(i => JSON.stringify(i));
+
+            const nativeResponse = new NativeResponseStub(chunks, ContentType.EVENT_STREAM);
+            const response = new RequestProviderResponseStub(nativeResponse);
+
+            const observer = await response.data();
+
+            try {
+                await (observer as StreamObserverStub).fetchAll();
+            } catch (e) {
+                expect(e).toBeDefined();
+            }
         });
     });
 });
