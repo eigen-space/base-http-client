@@ -17,6 +17,14 @@ export class NativeResponseStub {
         this.contentTypeHeader = contentTypeHeader;
     }
 
+    get headers(): Map<string, string | undefined> {
+        return new Map([['Content-Type', this.contentTypeHeader]]);
+    }
+
+    get status(): HttpStatusCode | number {
+        return this.statusData;
+    }
+
     async json(): Promise<AnyDictionary> {
         return this.data as AnyDictionary;
     }
@@ -25,7 +33,20 @@ export class NativeResponseStub {
         const source = new Readable();
         const stream = new Transform({
             readableObjectMode: true,
-            transform: (data: string, _, done) => done(null, JSON.parse(data))
+            transform: (data: string, _, done) => {
+                // Convert to event source chunk
+                const entries = Object.entries(JSON.parse(data));
+
+                const partOfChunks = entries.map(([key, value]) => {
+                    let formattedValue = value;
+                    if (typeof value === 'object') {
+                        formattedValue = JSON.stringify(value);
+                    }
+                    return `${key}:${formattedValue}`;
+                });
+
+                done(null, partOfChunks.join('\n'));
+            }
         });
 
         const messages = [...this.data as EventMessage<string>[], null];
@@ -34,13 +55,5 @@ export class NativeResponseStub {
         source.pipe(stream);
 
         return new StreamObserverStub(stream);
-    }
-
-    get headers(): Map<string, string | undefined> {
-        return new Map([['Content-Type', this.contentTypeHeader]]);
-    }
-
-    get status(): HttpStatusCode | number {
-        return this.statusData;
     }
 }

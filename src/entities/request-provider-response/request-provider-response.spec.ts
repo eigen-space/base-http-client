@@ -87,9 +87,9 @@ describe('RequestProviderResponse', () => {
 
         it('should return entity list if there are list to stream', async () => {
             const chunks = [
-                { type: 'payload', data: '1' },
-                { type: 'payload', data: '2' },
-                { type: 'payload', data: '3' },
+                { type: 'payload', data: { key: 1 } },
+                { type: 'payload', data: { key: 2 } },
+                { type: 'payload', data: { key: 3 } },
                 { type: 'end' }
             ].map(i => JSON.stringify(i));
 
@@ -100,7 +100,7 @@ describe('RequestProviderResponse', () => {
             const data = await (observer as StreamObserverStub).fetchAll();
 
             const expected = {
-                items: ['1', '2', '3']
+                items: [{ key: 1 }, { key: 2 }, { key: 3 }]
             };
             expect(data).toEqual(expected);
         });
@@ -108,9 +108,9 @@ describe('RequestProviderResponse', () => {
         it('should process defined events to stream', async () => {
             const chunks = [
                 { type: 'custom-header', data: { status: 200 } },
-                { type: 'custom-payload', data: '1' },
-                { type: 'custom-payload', data: '2' },
-                { type: 'custom-payload', data: '3' },
+                { type: 'custom-payload', data: { key: 1 } },
+                { type: 'custom-payload', data: { key: 2 } },
+                { type: 'custom-payload', data: { key: 3 } },
                 { type: 'custom-end' }
             ].map(i => JSON.stringify(i));
 
@@ -123,7 +123,7 @@ describe('RequestProviderResponse', () => {
 
             const expected = {
                 status: 200,
-                items: ['1', '2', '3']
+                items: [{ key: 1 }, { key: 2 }, { key: 3 }]
             };
             expect(data).toEqual(expected);
         });
