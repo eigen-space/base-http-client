@@ -130,7 +130,7 @@ describe('RequestProviderResponse', () => {
 
         it('should throw error if event is not familiar', async () => {
             const chunks = [
-                { event: 'custom-end' }
+                { event: 'error', data: { status: 404 } }
             ].map(i => JSON.stringify(i));
 
             const nativeResponse = new NativeResponseStub(chunks, ContentType.EVENT_STREAM);

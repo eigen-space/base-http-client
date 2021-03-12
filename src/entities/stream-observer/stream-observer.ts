@@ -52,7 +52,7 @@ export class StreamObserver<S extends EventEmitter = EventEmitter> {
                         default:
                             const message = `event did not recognized or error was thrown ${JSON.stringify(payload)}`;
                             this.logger.info('fetchAll', message);
-                            reject(message);
+                            reject(payload.data || message);
                             unsubscribeFn();
                     }
                 });
