@@ -1,6 +1,6 @@
 {
     "name": "@eigenspace/base-http-client",
-    "version": "1.0.10",
+    "version": "1.0.11",
     "description": "The implementation of an abstraction of http requests",
     "main": "index.js",
     "author": "Nikita Agupov <nktrsk@gmail.com>",
@@ -19,7 +19,7 @@
         "url": "https://github.com/eigen-space/base-http-service/issues"
     },
     "homepage": "https://github.com/eigen-space/base-http-service#readme",
-    "engine" : {
+    "engine": {
         "node": "14.15"
     },
     "scripts": {
