@@ -19,6 +19,9 @@
         "url": "https://github.com/eigen-space/base-http-service/issues"
     },
     "homepage": "https://github.com/eigen-space/base-http-service#readme",
+    "engine" : {
+        "node": "14.15"
+    },
     "scripts": {
         "build": "webpack --config=config/webpack/webpack.config.prod.js --progress",
         "lint:code": "eslint --ext .ts",
