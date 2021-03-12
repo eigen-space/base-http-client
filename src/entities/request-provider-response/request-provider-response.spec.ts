@@ -128,11 +128,26 @@ describe('RequestProviderResponse', () => {
             expect(data).toEqual(expected);
         });
 
-        it('should throw error if event is not familiar', async () => {
+        it('should throw message data if event is not familiar', async () => {
             const chunks = [
                 { event: 'error', data: { status: 404 } }
             ].map(i => JSON.stringify(i));
 
+            const nativeResponse = new NativeResponseStub(chunks, ContentType.EVENT_STREAM);
+            const response = new RequestProviderResponseStub(nativeResponse);
+
+            const observer = await response.data();
+
+            try {
+                await (observer as StreamObserverStub).fetchAll();
+            } catch (e) {
+                const expected = { status: 404 };
+                expect(e).toEqual(expected);
+            }
+        });
+
+        it('should throw description of error if event is not familiar and message data is empty', async () => {
+            const chunks = [{ event: 'error' }].map(i => JSON.stringify(i));
             const nativeResponse = new NativeResponseStub(chunks, ContentType.EVENT_STREAM);
             const response = new RequestProviderResponseStub(nativeResponse);
 
