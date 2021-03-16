@@ -1,7 +1,6 @@
 import { AnyDictionary } from '@eigenspace/common-types';
 import { HttpStatusCode, StreamObserver } from '../..';
 import { Readable, Transform } from 'stream';
-import { StreamObserverStub } from '../stream-observer/stream-observer.stub';
 import { EventMessage } from '../event-message/event-message';
 
 export class NativeResponseStub {
@@ -29,7 +28,7 @@ export class NativeResponseStub {
         return this.data as AnyDictionary;
     }
 
-    async observer(): Promise<StreamObserver> {
+    async observer(): Promise<StreamObserver<AnyDictionary>> {
         const source = new Readable();
         const stream = new Transform({
             readableObjectMode: true,
@@ -55,6 +54,6 @@ export class NativeResponseStub {
 
         source.pipe(stream);
 
-        return new StreamObserverStub(stream);
+        return new StreamObserver(stream);
     }
 }
