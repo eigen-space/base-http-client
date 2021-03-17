@@ -1,6 +1,6 @@
 {
     "name": "@eigenspace/base-http-client",
-    "version": "1.0.12",
+    "version": "1.0.13",
     "description": "The implementation of an abstraction of http requests",
     "main": "index.js",
     "author": "Nikita Agupov <nktrsk@gmail.com>",
