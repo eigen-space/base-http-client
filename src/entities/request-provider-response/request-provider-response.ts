@@ -4,7 +4,7 @@ import { Dictionary } from '@eigenspace/common-types';
 import { Logger } from '@eigenspace/logger';
 import { Blob, StreamObserver } from '../../types';
 
-export type OutputData<T, R> = T | R | Blob | StreamObserver | undefined;
+export type OutputData<T, R> = T | R | Blob | StreamObserver<T> | undefined;
 
 export abstract class RequestProviderResponse<T, R> {
     protected contentTypeToHandler = {
@@ -50,7 +50,7 @@ export abstract class RequestProviderResponse<T, R> {
 
     protected abstract blob(): Promise<Blob>;
 
-    protected abstract observer(): Promise<StreamObserver>;
+    protected abstract observer(): Promise<StreamObserver<T>>;
 
     protected abstract get contentTypeHeader(): ContentType | string | undefined;
 }

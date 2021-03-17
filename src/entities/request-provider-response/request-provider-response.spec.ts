@@ -2,7 +2,8 @@ import { RequestProviderResponseStub } from './request-provider-response.stub';
 import { NativeResponseStub } from './native-respose.stub';
 import { ContentType } from '../..';
 import { HttpStatusCode } from '../..';
-import { StreamObserverStub } from '../stream-observer/stream-observer.stub';
+import { StreamObserver } from '..';
+import { AnyDictionary } from '@eigenspace/common-types';
 
 describe('RequestProviderResponse', () => {
 
@@ -54,7 +55,7 @@ describe('RequestProviderResponse', () => {
             }
         });
 
-        it('should throw error for unprocessed response', async () => {
+        it('should return response as is for unknown response type', async () => {
             const rawData = 'plain-text';
             const nativeResponse = new NativeResponseStub(rawData, ContentType.PLAIN_TEXT);
             const response = new RequestProviderResponseStub(nativeResponse);
@@ -79,7 +80,7 @@ describe('RequestProviderResponse', () => {
             const response = new RequestProviderResponseStub(nativeResponse);
 
             const observer = await response.data();
-            const data = await (observer as StreamObserverStub).fetchAll();
+            const data = await (observer as StreamObserver<AnyDictionary>).fetchAll();
 
             const expected = { items: [] };
             expect(data).toEqual(expected);
@@ -97,7 +98,7 @@ describe('RequestProviderResponse', () => {
             const response = new RequestProviderResponseStub(nativeResponse);
 
             const observer = await response.data();
-            const data = await (observer as StreamObserverStub).fetchAll();
+            const data = await (observer as StreamObserver<AnyDictionary>).fetchAll();
 
             const expected = {
                 items: [{ key: 1 }, { key: 2 }, { key: 3 }]
@@ -119,7 +120,7 @@ describe('RequestProviderResponse', () => {
 
             const observer = await response.data();
             const events = ['custom-header', 'custom-payload', 'custom-end'];
-            const data = await (observer as StreamObserverStub).fetchAll(...events);
+            const data = await (observer as StreamObserver<AnyDictionary>).fetchAll(...events);
 
             const expected = {
                 status: 200,
@@ -139,7 +140,7 @@ describe('RequestProviderResponse', () => {
             const observer = await response.data();
 
             try {
-                await (observer as StreamObserverStub).fetchAll();
+                await (observer as StreamObserver<AnyDictionary>).fetchAll();
             } catch (e) {
                 const expected = { status: 404 };
                 expect(e).toEqual(expected);
@@ -154,7 +155,7 @@ describe('RequestProviderResponse', () => {
             const observer = await response.data();
 
             try {
-                await (observer as StreamObserverStub).fetchAll();
+                await (observer as StreamObserver<AnyDictionary>).fetchAll();
             } catch (e) {
                 expect(e).toBeDefined();
             }

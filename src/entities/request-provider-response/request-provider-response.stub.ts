@@ -14,7 +14,7 @@ export class RequestProviderResponseStub extends RequestProviderResponse<AnyDict
         return this.nativeResponse.json();
     }
 
-    protected observer(): Promise<StreamObserver> {
+    protected observer(): Promise<StreamObserver<AnyDictionary>> {
         return this.nativeResponse.observer();
     }
 

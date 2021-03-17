@@ -11,68 +11,65 @@ export interface EventEmitter {
     off(event: string, callback: Function): void;
 }
 
-export class StreamObserver<S extends EventEmitter = EventEmitter> {
-    stream: S;
+type Binary = string;
+
+export class StreamObserver<T> {
+    stream: EventEmitter;
 
     private chunkConverter = new EventSourceConverter();
 
     private logger = new Logger({ component: 'StreamObserver' });
 
-    constructor(stream: S) {
+    constructor(stream: EventEmitter) {
         this.stream = stream;
-
-        this.extractData = this.extractData.bind(this);
     }
 
-    fetchAll<T>(
-        headerEvent = 'header',
-        payloadEvent = 'payload',
-        endEvent = 'end'
-    ): Promise<FetchAllResponse<T>> {
-        let data: FetchAllResponse<T> = { items: [] };
-        const rawChunks: string[] = [];
+    fetchAll(headerEvent = 'header', payloadEvent = 'payload', endEvent = 'end'): Promise<FetchAllResponse<T>> {
+        const chunkStore: string[] = [];
 
         return new Promise((resolve, reject) => {
+            this.stream.on('data', (chunk: Binary) => chunkStore.push(chunk));
 
-            const convertData = (unsubscribeFn: Function): void => {
-                const messages = this.chunkConverter.convert(rawChunks.join(''));
+            this.stream.on('end', () => {
+                try {
+                    const data = this.convertData(chunkStore, headerEvent, payloadEvent, endEvent);
+                    resolve(data);
+                } catch (e) {
+                    reject(e);
+                }
+            });
 
-                messages.forEach(payload => {
-                    switch (payload.event) {
-                        case headerEvent:
-                            data = { ...payload.data, items: data.items };
-                            break;
-                        case payloadEvent:
-                            data.items.push(payload.data);
-                            break;
-                        case endEvent:
-                            resolve(data);
-                            unsubscribeFn();
-                            break;
-                        default:
-                            const message = `event did not recognized or error was thrown ${JSON.stringify(payload)}`;
-                            this.logger.info('fetchAll', message);
-                            reject(payload.data || message);
-                            unsubscribeFn();
-                    }
-                });
-            };
-
-            this.stream.on('data', (chunk: string) => this.extractData(chunk, rawChunks));
-
-            this.stream.on(
-                'end',
-                () => convertData(() => this.unsubscribe('end', [convertData, this.extractData]))
-            );
+            this.stream.on('error', reject);
         });
     };
 
-    // noinspection JSMethodCanBeStatic
-    private extractData(rawChunk: string, chunkStore: string[]): void {
-        chunkStore.push(rawChunk.toString());
-    };
+    private convertData(
+        chunkStore: string[],
+        headerEvent: string,
+        payloadEvent: string,
+        endEvent: string
+    ): FetchAllResponse<T> {
+        const messages = this.chunkConverter.convert(chunkStore.join(''));
+        let data: FetchAllResponse<T> = { items: [] };
 
-    private unsubscribe(event: string, callbacks: Function[]): void {
-        callbacks.forEach(cb => this.stream.off(event, cb));
-    }
+        messages.forEach(payload => {
+            switch (payload.event) {
+                case headerEvent:
+                    data = { ...payload.data, items: data.items };
+                    break;
+                case payloadEvent:
+                    data.items.push(payload.data);
+                    break;
+                case endEvent:
+                    this.logger.info('fetchAll', 'consumed all data');
+                    break;
+                default:
+                    const message = `event did not recognized or error was thrown ${JSON.stringify(payload)}`;
+                    this.logger.info('fetchAll', message);
+                    throw payload.data || message;
+            }
+        });
+
+        return data;
+    };
 }

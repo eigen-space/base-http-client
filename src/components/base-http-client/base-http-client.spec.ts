@@ -17,10 +17,10 @@ describe('BaseHttpClient', () => {
 
             await client.get(baseUrl);
 
-            const commonPayload = {
-                headers: { 'Cache-Control': 'no-cache, no-store, max-age=0, must-revalidate' }
+            const commonProps = {
+                headers: { 'Cache-Control': 'no-store, max-age=0' }
             };
-            const expectedPayload = { method: HttpRequestMethod.GET, ...commonPayload };
+            const expectedPayload = { method: HttpRequestMethod.GET, ...commonProps };
             expect(provider.fetch).toBeCalledWith(baseUrl, expectedPayload);
         });
 
@@ -31,11 +31,11 @@ describe('BaseHttpClient', () => {
 
             await client.get(fragmentUrl);
 
-            const commonPayload = {
-                headers: { 'Cache-Control': 'no-cache, no-store, max-age=0, must-revalidate' }
+            const commonProps = {
+                headers: { 'Cache-Control': 'no-store, max-age=0' }
             };
             const expectedUrl = `${baseUrl}${fragmentUrl}`;
-            const expectedPayload = { method: HttpRequestMethod.GET, ...commonPayload };
+            const expectedPayload = { method: HttpRequestMethod.GET, ...commonProps };
             expect(provider.fetch).toBeCalledWith(expectedUrl, expectedPayload);
         });
 
@@ -47,8 +47,8 @@ describe('BaseHttpClient', () => {
 
             await client.get(baseUrl, props);
 
-            const commonPayload = { headers: {} };
-            const expectedPayload = { method: HttpRequestMethod.GET, ...commonPayload };
+            const commonProps = { headers: {} };
+            const expectedPayload = { method: HttpRequestMethod.GET, ...commonProps };
             expect(provider.fetch).toBeCalledWith(baseUrl, expectedPayload);
         });
 
@@ -58,10 +58,10 @@ describe('BaseHttpClient', () => {
 
             await client.get(baseUrl);
 
-            const commonPayload = {
-                headers: { 'Cache-Control': 'no-cache, no-store, max-age=0, must-revalidate' }
+            const commonProps = {
+                headers: { 'Cache-Control': 'no-store, max-age=0' }
             };
-            const expectedPayload = { method: HttpRequestMethod.GET, ...commonPayload };
+            const expectedPayload = { method: HttpRequestMethod.GET, ...commonProps };
             expect(provider.fetch).toBeCalledWith(baseUrl, expectedPayload);
         });
     });
@@ -79,7 +79,7 @@ describe('BaseHttpClient', () => {
             const headers = {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Cache-Control': 'no-cache, no-store, max-age=0, must-revalidate'
+                'Cache-Control': 'no-store, max-age=0'
             };
             const body = JSON.stringify(data);
             const expectedPayload = { method: HttpRequestMethod.POST, headers, body };
@@ -112,11 +112,11 @@ describe('BaseHttpClient', () => {
             const headers = {
                 'Accept': 'application/json',
                 'Content-Type': 'multipart/form-data',
-                'Cache-Control': 'no-cache, no-store, max-age=0, must-revalidate'
+                'Cache-Control': 'no-store, max-age=0'
             };
             const body = new FormDataAppenderStub([['key', 'value', 'options']]);
-            const expectedPayload = { method: HttpRequestMethod.POST, headers, body };
-            expect(provider.fetch).toBeCalledWith(baseUrl, expectedPayload);
+            const commonProps = { method: HttpRequestMethod.POST, headers, body };
+            expect(provider.fetch).toBeCalledWith(baseUrl, commonProps);
         });
     });
 });
