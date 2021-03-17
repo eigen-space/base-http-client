@@ -63,9 +63,7 @@ export class BaseHttpClient<R> implements QueryProvider<R> {
         let body = data;
         let headers: Dictionary<string> = props.headers || {};
 
-        // TODO: it was made in such style because the parser of js is not support ?? operator.
-        // Should be fixed after its update.
-        const isAntiCacheEnabled = options?.isAntiCacheEnabled != null ? options.isAntiCacheEnabled : true;
+        const isAntiCacheEnabled = options?.isAntiCacheEnabled ?? true;
         if (isAntiCacheEnabled) {
             headers = { ...headers, 'Cache-Control': 'no-store, max-age=0' };
         }
