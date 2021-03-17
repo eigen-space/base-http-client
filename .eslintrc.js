@@ -1,1 +1,3 @@
-module.exports = { extends: ['plugin:eigenspace-script/all'] };
+module.exports = {
+    extends: ['plugin:eigenspace-script/all']
+};
