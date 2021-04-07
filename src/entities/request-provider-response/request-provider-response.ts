@@ -25,13 +25,8 @@ export abstract class RequestProviderResponse<T, R> {
             return;
         }
 
-        // For instance, DELETE method should not contain content type
-        // ... but it should have content length equaling zero.
-        if (!this.contentTypeHeader && 0 < this.contentLength) {
-            throw new Error('Content-Type in response headers should be defined');
-        }
-
         if (!this.contentTypeHeader) {
+            this.logger.debug('data', 'returning response without processing because Content-Type is empty');
             return this.nativeResponse;
         }
 
