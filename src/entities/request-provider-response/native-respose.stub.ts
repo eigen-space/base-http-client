@@ -8,16 +8,26 @@ export class NativeResponseStub {
     private readonly data: any;
     private readonly statusData: HttpStatusCode;
     private readonly contentTypeHeader?: string;
+    private readonly contentLengthHeader?: string;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    constructor(data: any, contentTypeHeader?: string, status = HttpStatusCode.OK) {
+    constructor(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        data: any,
+        contentTypeHeader?: string,
+        status = HttpStatusCode.OK,
+        contentLengthHeader = '10'
+    ) {
         this.data = data;
         this.statusData = status;
         this.contentTypeHeader = contentTypeHeader;
+        this.contentLengthHeader = contentLengthHeader;
     }
 
     get headers(): Map<string, string | undefined> {
-        return new Map([['Content-Type', this.contentTypeHeader]]);
+        return new Map([
+            ['Content-Type', this.contentTypeHeader],
+            ['Content-Length', this.contentLengthHeader]
+        ]);
     }
 
     get status(): HttpStatusCode | number {

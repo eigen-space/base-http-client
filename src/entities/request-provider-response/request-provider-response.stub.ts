@@ -22,6 +22,10 @@ export class RequestProviderResponseStub extends RequestProviderResponse<AnyDict
         return this.nativeResponse.headers.get('Content-Type')!;
     }
 
+    protected get contentLength(): number {
+        return Number(this.nativeResponse.headers.get('Content-Length'));
+    }
+
     protected blob(): Promise<Blob> {
         throw new Error('Not implemented');
     }

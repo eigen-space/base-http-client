@@ -25,8 +25,14 @@ export abstract class RequestProviderResponse<T, R> {
             return;
         }
 
+        // For instance, DELETE method should not contain content type
+        // ... but it should have content length equaling zero.
+        if (!this.contentTypeHeader && 0 < this.contentLength) {
+            throw new Error('Content-Type in response headers should be defined');
+        }
+
         if (!this.contentTypeHeader) {
-            throw new Error('Content type in response headers should be defined');
+            return this.nativeResponse;
         }
 
         // Header can contain not only content type, but other is as well e.g. `multipart/mixed; boundary=abcde`
@@ -53,4 +59,6 @@ export abstract class RequestProviderResponse<T, R> {
     protected abstract observer(): Promise<StreamObserver<T>>;
 
     protected abstract get contentTypeHeader(): ContentType | string | undefined;
+
+    protected abstract get contentLength(): number;
 }

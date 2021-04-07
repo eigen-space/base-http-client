@@ -1,7 +1,6 @@
 import { RequestProviderResponseStub } from './request-provider-response.stub';
 import { NativeResponseStub } from './native-respose.stub';
-import { ContentType } from '../..';
-import { HttpStatusCode } from '../..';
+import { ContentType, HttpStatusCode } from '../..';
 import { StreamObserver } from '..';
 import { AnyDictionary } from '@eigenspace/common-types';
 
@@ -43,9 +42,9 @@ describe('RequestProviderResponse', () => {
             }
         });
 
-        it('should throw error for empty content type', async () => {
+        it('should throw error for empty content type and existing content length', async () => {
             const rawData = 'plain-text';
-            const nativeResponse = new NativeResponseStub(rawData, undefined);
+            const nativeResponse = new NativeResponseStub(rawData, undefined, HttpStatusCode.OK, '10');
             const response = new RequestProviderResponseStub(nativeResponse);
 
             try {
@@ -53,6 +52,15 @@ describe('RequestProviderResponse', () => {
             } catch (e) {
                 expect(e).toBeDefined();
             }
+        });
+
+        it('should process a request without any errors even if content-type is not set', async () => {
+            const rawData = '';
+            const nativeResponse = new NativeResponseStub(rawData, undefined, HttpStatusCode.OK, '0');
+            const response = new RequestProviderResponseStub(nativeResponse);
+
+            const actual = await response.data() as AnyDictionary;
+            expect(actual.statusData).toBe(HttpStatusCode.OK);
         });
 
         it('should return response as is for unknown response type', async () => {
