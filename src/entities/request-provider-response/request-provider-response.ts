@@ -26,7 +26,8 @@ export abstract class RequestProviderResponse<T, R> {
         }
 
         if (!this.contentTypeHeader) {
-            throw new Error('Content type in response headers should be defined');
+            this.logger.debug('data', 'returning response without processing because Content-Type is empty');
+            return this.nativeResponse;
         }
 
         // Header can contain not only content type, but other is as well e.g. `multipart/mixed; boundary=abcde`
