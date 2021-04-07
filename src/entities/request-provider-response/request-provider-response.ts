@@ -54,6 +54,4 @@ export abstract class RequestProviderResponse<T, R> {
     protected abstract observer(): Promise<StreamObserver<T>>;
 
     protected abstract get contentTypeHeader(): ContentType | string | undefined;
-
-    protected abstract get contentLength(): number;
 }

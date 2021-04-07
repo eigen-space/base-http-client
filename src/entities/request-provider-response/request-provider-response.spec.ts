@@ -42,21 +42,9 @@ describe('RequestProviderResponse', () => {
             }
         });
 
-        it('should throw error for empty content type and existing content length', async () => {
-            const rawData = 'plain-text';
-            const nativeResponse = new NativeResponseStub(rawData, undefined, HttpStatusCode.OK, '10');
-            const response = new RequestProviderResponseStub(nativeResponse);
-
-            try {
-                await response.data();
-            } catch (e) {
-                expect(e).toBeDefined();
-            }
-        });
-
         it('should process a request without any errors even if content-type is not set', async () => {
             const rawData = '';
-            const nativeResponse = new NativeResponseStub(rawData, undefined, HttpStatusCode.OK, '0');
+            const nativeResponse = new NativeResponseStub(rawData, undefined, HttpStatusCode.OK);
             const response = new RequestProviderResponseStub(nativeResponse);
 
             const actual = await response.data() as AnyDictionary;
