@@ -69,6 +69,6 @@
     },
     "dependencies": {
         "@eigenspace/logger": "1.0.8",
-        "@eigenspace/url-replacer": "1.0.2"
+        "@eigenspace/url-replacer": "1.0.3"
     }
 }
